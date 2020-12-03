@@ -195,7 +195,7 @@ public class VpnProfile implements Serializable, Cloneable {
 
     public static boolean doUseOpenVPN3(Context c) {
         // Nerver use OpenVPN3
-        return false;
+        return true;
     }
 
     //! Put inline data inline and other data as normal escaped filename
