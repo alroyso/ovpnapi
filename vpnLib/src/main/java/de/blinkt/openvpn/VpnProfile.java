@@ -166,6 +166,8 @@ public class VpnProfile implements Serializable, Cloneable {
     private UUID mUuid;
     private int mProfileVersion;
 
+    //
+
     public boolean mBlockUnusedAddressFamilies =true;
 
     public VpnProfile(String name) {
