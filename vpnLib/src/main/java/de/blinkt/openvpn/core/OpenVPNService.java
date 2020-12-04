@@ -317,7 +317,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             priority = PRIORITY_DEFAULT;
 
         if (mProfile != null)
-            nbuilder.setContentTitle(getString(R.string.notifcation_title, mProfile.mName));
+            nbuilder.setContentTitle(mProfile.mName);
         else
             nbuilder.setContentTitle(getString(R.string.notifcation_title_notconnect));
 
