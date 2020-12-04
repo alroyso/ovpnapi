@@ -611,34 +611,6 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
                 startOpenVPN();
             }
         }).start();
-        final Integer timeOutInSeconds = mProfile.timeOutInSeconds;
-        if(timeOutInSeconds != null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(timeOutInSeconds * 1000);
-                    } catch (Exception e) {
-
-                    }
-                    if (!("CONNECTED".equals(state)) && !("DISCONNECTED".equals(state))) {
-                        try {
-                            sendMessage("TIMEOUT");
-                            try {
-                                Thread.sleep(1000);
-                            } catch (Exception e) {
-
-                            }
-                            stopVPN(false);
-                        }catch (Exception e){
-                            Log.e("stop vpn crash", e.toString() );
-                        }
-                    }
-                }
-            }).start();
-        }else{
-            Log.d("VPNex" , "null timeout");
-        }
 
 
         ProfileManager.setConnectedVpnProfile(this, mProfile);
@@ -1433,9 +1405,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         Intent intent = new Intent("connectionState");
         intent.putExtra("state", state);
         this.state = state;
-        //TODO legacy
-        //LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-        getSharedPreferences("flutter_openvpn", MODE_PRIVATE).edit().putString("vpnStatus" , state).apply();
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
     //sending message to main activity
     public static final String GLOBAL_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -1462,25 +1432,14 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             Date currentTime = Calendar.getInstance().getTime();
             if (currentTime.after(expireDate)) {
                 try{
-                    sendMessage("EXPIRED");
-                    try {
-                        Thread.sleep(1000);
-                    } catch (Exception e) {
-
-                    }
                     stopVPN(false);
                 }catch (Exception err){
-                    Log.e("stop vpn crash", err.toString() );
+
                 }
             }
         }
-        //TODO legacy
-        //LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-        if(duration == null) duration = "" ;
-        if(lastPacketReceive == null) lastPacketReceive = "";
-        if(byteIn == "") byteIn = "";
-        if(byteOut == "") byteOut = "";
-        getSharedPreferences("flutter_openvpn", MODE_PRIVATE).edit().putString("connectionUpdate" , duration + '_' + lastPacketReceive + '_' + byteIn + '_' + byteOut).apply();
+
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
     public class LocalBinder extends Binder {
         public OpenVPNService getService() {
