@@ -20,12 +20,12 @@ public class OpenVpnApi {
 
     private static final String  TAG = "OpenVpnApi";
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-    public static void startVpn(Context context, String inlineConfig, String sCountry,String expireAt , String userName, String pw) throws RemoteException {
+    public static void startVpn(Context context, String inlineConfig, String sCountry,String expireAt , String userName, String pw,String connectRetry) throws RemoteException {
         if (TextUtils.isEmpty(inlineConfig)) throw new RemoteException("config is empty");
-            startVpnInternal(context, inlineConfig, sCountry,expireAt, userName, pw);
+            startVpnInternal(context, inlineConfig, sCountry,expireAt, userName, pw,connectRetry);
     }
 
-    static void startVpnInternal(Context context, String inlineConfig, String sCountry,String expireAt ,  String userName, String pw) throws RemoteException {
+    static void startVpnInternal(Context context, String inlineConfig, String sCountry,String expireAt ,  String userName, String pw,String connectRetry) throws RemoteException {
         ConfigParser cp = new ConfigParser();
         try {
             cp.parseConfig(new StringReader(inlineConfig));
@@ -40,6 +40,8 @@ public class OpenVpnApi {
             vp.mUsername = userName;
             vp.mPassword = pw;
             vp.mExpireAt = expireAt;
+            vp.mConnectRetry = connectRetry;
+            vp.mConnectRetryMax = connectRetry;
             ProfileManager.setTemporaryProfile(context, vp);
             VPNLaunchHelper.startOpenVpn(vp, context);
         } catch (IOException | ConfigParser.ConfigParseError e) {

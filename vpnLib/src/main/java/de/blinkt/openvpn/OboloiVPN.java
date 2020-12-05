@@ -34,6 +34,7 @@ public class OboloiVPN extends Activity {
     private static String user;
     private static String pass;
     private static String vpnname;
+    private static String connectRetry;
 
     public OboloiVPN(Activity activity) {
         OboloiVPN.activity = activity;
@@ -54,13 +55,14 @@ public class OboloiVPN extends Activity {
         LocalBroadcastManager.getInstance(activity).registerReceiver(broadcastReceiver, new IntentFilter("connectionState"));
     }
 
-    public void launchVPN(String ovpnFileContent,String expireAt, String user,  String pass,String name){
+    public void launchVPN(String ovpnFileContent,String expireAt, String user,  String pass,String name,String connectRetry){
         OboloiVPN.ovpnFileContent = ovpnFileContent;
         OboloiVPN.expireAt = expireAt;
         OboloiVPN.profileIntent = VpnService.prepare(activity);
         OboloiVPN.user = user;
         OboloiVPN.pass = pass;
         OboloiVPN.vpnname = name;
+        OboloiVPN.connectRetry = connectRetry;
         if(profileIntent != null) {
             activity.startActivityForResult(OboloiVPN.profileIntent, 1);
             return;
@@ -114,7 +116,7 @@ public class OboloiVPN extends Activity {
     private void startVpn() {
         try {
 
-            OpenVpnApi.startVpn(activity, ovpnFileContent, vpnname, expireAt,user, pass);
+            OpenVpnApi.startVpn(activity, ovpnFileContent, vpnname, expireAt,user, pass,connectRetry);
 
             //connecting status
             vpnStart = true;
