@@ -100,7 +100,7 @@ public class OboloiVPN extends Activity {
         }
     }
 
-    private boolean stopVpn() {
+    public boolean stopVpn() {
         try {
             vpnThread.stop();
             //disconnected status
@@ -113,7 +113,7 @@ public class OboloiVPN extends Activity {
         return false;
     }
 
-    private void startVpn() {
+    public void startVpn() {
         try {
 
             OpenVpnApi.startVpn(activity, ovpnFileContent, vpnname, expireAt,user, pass,connectRetry);
